@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -26,8 +27,8 @@
       <p>دروس مسجلة، حصص مباشرة، امتحانات، ومتابعة للطالب وولي الأمر من مكان واحد.</p>
 
       <div class="hero-actions">
-        <button class="primary" onclick="showAuth('student')">دخول الطالب</button>
-        <button class="secondary" onclick="showAuth('parent')">دخول ولي الأمر</button>
+        <button type="button" class="primary" onclick="showAuth('student')">دخول الطالب</button>
+        <button type="button" class="secondary" onclick="showAuth('parent')">دخول ولي الأمر</button>
       </div>
 
       <p class="note" id="connectionStatus" role="status">
@@ -46,23 +47,36 @@
   </section>
 
   <section id="auth" class="panel hidden">
-    <button class="back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="back" onclick="goHome()">← رجوع</button>
     <h2 id="authTitle">تسجيل الدخول</h2>
     <p id="authDesc" class="muted">اكتب بيانات الحساب التجريبي.</p>
 
     <div class="field">
       <label for="phone">رقم الموبايل</label>
-      <input id="phone" inputmode="tel" placeholder="مثال: 01xxxxxxxxx">
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="مثال: 01xxxxxxxxx"
+      >
     </div>
 
     <div class="field">
       <label for="password">كلمة المرور</label>
-      <input id="password" type="password" placeholder="اكتب كلمة المرور">
+      <input
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="اكتب كلمة المرور"
+      >
     </div>
 
     <div id="studentFields" class="field hidden">
       <label for="grade">المرحلة الدراسية</label>
-      <select id="grade">
+      <select id="grade" name="grade">
         <option>ابتدائي</option>
         <option>إعدادي</option>
         <option>ثانوي</option>
@@ -71,10 +85,19 @@
 
     <div id="parentFields" class="field hidden">
       <label for="studentCode">كود الطالب المرتبط بالحساب</label>
-      <input id="studentCode" placeholder="كود الطالب">
+      <input
+        id="studentCode"
+        name="studentCode"
+        type="text"
+        autocomplete="off"
+        placeholder="كود الطالب"
+      >
     </div>
 
-    <button class="primary full" onclick="demoLogin()">دخول تجريبي</button>
+    <button type="button" class="primary full" onclick="demoLogin()">
+      دخول تجريبي
+    </button>
+
     <p id="authError" class="error"></p>
     <p class="note">الدخول هنا تجريبي فقط؛ لا تستخدم كلمة مرور حقيقية.</p>
   </section>
@@ -85,14 +108,23 @@
         <p class="eyebrow" id="roleLabel">لوحة التحكم</p>
         <h2 id="dashTitle">أهلاً بيك</h2>
       </div>
-      <button class="secondary small" onclick="logout()">تسجيل خروج</button>
+      <button type="button" class="secondary small" onclick="logout()">تسجيل خروج</button>
     </div>
 
     <div id="studentDash" class="hidden">
       <div class="stats">
-        <article class="stat"><span>المرحلة</span><strong id="studentGrade">—</strong></article>
-        <article class="stat"><span>الاشتراك</span><strong>تجريبي</strong></article>
-        <article class="stat"><span>الحضور</span><strong>تجريبي</strong></article>
+        <article class="stat">
+          <span>المرحلة</span>
+          <strong id="studentGrade">—</strong>
+        </article>
+        <article class="stat">
+          <span>الاشتراك</span>
+          <strong>تجريبي</strong>
+        </article>
+        <article class="stat">
+          <span>الحضور</span>
+          <strong>تجريبي</strong>
+        </article>
       </div>
 
       <div class="dash-grid">
@@ -107,28 +139,43 @@
             <option>اللغة العربية</option>
             <option>اللغة الإنجليزية</option>
           </select>
-          <button class="primary full" onclick="showMessage('الدروس هتظهر بعد ربط محتواها بقاعدة البيانات.')">عرض الدروس</button>
+          <button type="button" class="primary full" onclick="showMessage('الدروس هتظهر بعد ربط محتواها بقاعدة البيانات.')">
+            عرض الدروس
+          </button>
         </article>
 
         <article class="panel">
           <h3>📝 الامتحانات</h3>
           <p>هنا هتظهر الامتحانات والدرجات بعد تفعيل النظام.</p>
-          <button class="secondary full" onclick="showMessage('قسم الامتحانات لسه تجريبي.')">فتح الامتحانات</button>
+          <button type="button" class="secondary full" onclick="showMessage('قسم الامتحانات لسه تجريبي.')">
+            فتح الامتحانات
+          </button>
         </article>
 
         <article class="panel">
           <h3>📡 الحصص المباشرة</h3>
           <p>رابط الحصة وموعدها هيظهروا هنا.</p>
-          <button class="secondary full" onclick="showMessage('الحصص المباشرة لسه تحت التجهيز.')">جدول الحصص</button>
+          <button type="button" class="secondary full" onclick="showMessage('الحصص المباشرة لسه تحت التجهيز.')">
+            جدول الحصص
+          </button>
         </article>
       </div>
     </div>
 
     <div id="parentDash" class="hidden">
       <div class="stats">
-        <article class="stat"><span>الطالب المرتبط</span><strong id="linkedStudent">—</strong></article>
-        <article class="stat"><span>الحضور والغياب</span><strong>متابعة</strong></article>
-        <article class="stat"><span>الدرجات</span><strong>تجريبي</strong></article>
+        <article class="stat">
+          <span>الطالب المرتبط</span>
+          <strong id="linkedStudent">—</strong>
+        </article>
+        <article class="stat">
+          <span>الحضور والغياب</span>
+          <strong>متابعة</strong>
+        </article>
+        <article class="stat">
+          <span>الدرجات</span>
+          <strong>تجريبي</strong>
+        </article>
       </div>
 
       <div class="dash-grid">
@@ -161,11 +208,13 @@
         <strong>20 <small>جنيه / أسبوع</small></strong>
         <p>دروس ومتابعة حسب المواد المتاحة.</p>
       </article>
+
       <article class="price-card">
         <span>إعدادي</span>
         <strong>50 <small>جنيه / أسبوع</small></strong>
         <p>دروس وامتحانات ومتابعة.</p>
       </article>
+
       <article class="price-card">
         <span>ثانوي</span>
         <strong>100 <small>جنيه / أسبوع</small></strong>
@@ -173,16 +222,19 @@
       </article>
     </div>
 
-    <div class="payment-note">💳 الدفع المقترح: فودافون كاش، مع مراجعة التحويل وتفعيل الاشتراك يدويًا.</div>
+    <div class="payment-note">
+      💳 الدفع المقترح: فودافون كاش، مع مراجعة التحويل وتفعيل الاشتراك يدويًا.
+    </div>
   </section>
 </main>
 
 <footer>© الصياد التعليمية — EL SAYAD ACADEMY</footer>
+
 <div id="toast" role="status" class="toast hidden"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js?v=8"></script>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=9"></script>
 
 </body>
 </html>
