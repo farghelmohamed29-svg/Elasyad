@@ -7,92 +7,15 @@
   let selectedGrade = "الصف الرابع الابتدائي";
   let selectedSystem = "عام";
 
+  let curriculum = {};
+  let curriculumLoading = false;
+
   const $ = (id) => document.getElementById(id);
 
-  // قوائم مبدئية للمناهج المصرية؛ يلزم مراجعتها مع أحدث قرارات الوزارة.
-  const curriculum = {
-    "ابتدائي": {
-      "الصف الأول الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "متعدد التخصصات", "التربية الدينية", "القيم واحترام الآخر"
-      ],
-      "الصف الثاني الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "متعدد التخصصات", "التربية الدينية", "القيم واحترام الآخر"
-      ],
-      "الصف الثالث الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "متعدد التخصصات", "التربية الدينية", "القيم واحترام الآخر"
-      ],
-      "الصف الرابع الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "تكنولوجيا المعلومات",
-        "المهارات المهنية", "التربية الدينية", "التربية الفنية"
-      ],
-      "الصف الخامس الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "تكنولوجيا المعلومات",
-        "المهارات المهنية", "التربية الدينية", "التربية الفنية"
-      ],
-      "الصف السادس الابتدائي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "تكنولوجيا المعلومات",
-        "المهارات المهنية", "التربية الدينية", "التربية الفنية"
-      ]
-    },
-
-    "إعدادي": {
-      "الصف الأول الإعدادي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "الحاسب الآلي",
-        "التربية الدينية", "التربية الفنية"
-      ],
-      "الصف الثاني الإعدادي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "الحاسب الآلي",
-        "التربية الدينية", "التربية الفنية"
-      ],
-      "الصف الثالث الإعدادي": [
-        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
-        "العلوم", "الدراسات الاجتماعية", "الحاسب الآلي",
-        "التربية الدينية", "التربية الفنية"
-      ]
-    },
-
-    "ثانوي عام": {
-      "الصف الأول الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى", "الرياضيات",
-        "العلوم المتكاملة", "التاريخ", "الفلسفة والمنطق",
-        "البرمجة والذكاء الاصطناعي", "التربية الدينية"
-      ],
-      "الصف الثاني الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى", "الرياضيات",
-        "الفيزياء", "الكيمياء", "الأحياء",
-        "التاريخ", "الجغرافيا", "علم النفس", "الفلسفة"
-      ],
-      "الصف الثالث الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى", "الفيزياء",
-        "الكيمياء", "الأحياء", "الرياضيات",
-        "التاريخ", "الجغرافيا", "الإحصاء"
-      ]
-    },
-
-    "بكالوريا مصرية": {
-      "الصف الأول الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى", "الرياضيات",
-        "العلوم المتكاملة", "التاريخ", "الفلسفة والمنطق",
-        "البرمجة والذكاء الاصطناعي", "التربية الدينية"
-      ],
-      "الصف الثاني الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى",
-        "التاريخ المصري", "الرياضيات",
-        "مواد التخصص حسب المسار"
-      ],
-      "الصف الثالث الثانوي": [
-        "اللغة العربية", "اللغة الأجنبية الأولى",
-        "مواد التخصص حسب المسار"
-      ]
-    }
+  const stageMap = {
+    "primary": "ابتدائي",
+    "preparatory": "إعدادي",
+    "secondary": "ثانوي عام"
   };
 
   const demoLessons = {
@@ -135,7 +58,6 @@
 
     toast.textContent = text;
     toast.classList.remove("hidden");
-
     clearTimeout(message.timer);
     message.timer = setTimeout(
       () => toast.classList.add("hidden"),
@@ -150,7 +72,6 @@
     $("welcome")?.classList.add("hidden");
     $("auth")?.classList.remove("hidden");
     $("dashboard")?.classList.add("hidden");
-
     $("studentFields")?.classList.toggle("hidden", role !== "student");
     $("parentFields")?.classList.toggle("hidden", role !== "parent");
 
@@ -206,7 +127,6 @@
     $("welcome")?.classList.add("hidden");
     document.querySelector(".pricing")?.classList.add("hidden");
     $("dashboard")?.classList.remove("hidden");
-
     $("studentDash")?.classList.toggle("hidden", currentRole !== "student");
     $("parentDash")?.classList.toggle("hidden", currentRole !== "parent");
 
@@ -252,7 +172,49 @@
     return select;
   }
 
-  function setupStudentDashboard() {
+  async function loadCurriculum() {
+    const client = window.supabaseClient;
+
+    if (!client) {
+      throw new Error("اتصال Supabase غير جاهز. حدّث الصفحة وحاول مرة أخرى.");
+    }
+
+    const { data, error } = await client
+      .from("subjects")
+      .select("name, grade_level, grade_name, curriculum_type")
+      .eq("active", true)
+      .order("grade_name")
+      .order("name");
+
+    if (error) throw error;
+
+    const result = {};
+
+    (data || []).forEach((row) => {
+      const stage =
+        row.curriculum_type ||
+        stageMap[row.grade_level];
+
+      if (!stage || !row.grade_name || !row.name) return;
+
+      if (!result[stage]) result[stage] = {};
+      if (!result[stage][row.grade_name]) {
+        result[stage][row.grade_name] = [];
+      }
+
+      if (!result[stage][row.grade_name].includes(row.name)) {
+        result[stage][row.grade_name].push(row.name);
+      }
+    });
+
+    if (!Object.keys(result).length) {
+      throw new Error("لم يتم العثور على مواد نشطة في قاعدة البيانات.");
+    }
+
+    curriculum = result;
+  }
+
+  async function setupStudentDashboard() {
     const dash = $("studentDash");
     if (!dash) return;
 
@@ -273,115 +235,131 @@
 
     const note = document.createElement("p");
     note.className = "note";
-    note.textContent =
-      "قوائم المواد مبدئية للتجربة، ويجب مراجعتها وفق أحدث مناهج وقرارات وزارة التربية والتعليم المصرية.";
+    note.textContent = "جاري تحميل المواد من قاعدة البيانات...";
 
     chooser.append(title, note);
 
-    const stageSelect = addField(
-      "المرحلة التعليمية",
-      "curriculumStage",
-      ["ابتدائي", "إعدادي", "ثانوي عام", "بكالوريا مصرية"],
-      chooser
-    );
+    if (curriculumLoading) return;
+    curriculumLoading = true;
 
-    const gradeSelect = addField(
-      "الصف الدراسي",
-      "curriculumGrade",
-      Object.keys(curriculum["ابتدائي"]),
-      chooser
-    );
+    try {
+      await loadCurriculum();
 
-    const subjectSelect = addField(
-      "المادة",
-      "curriculumSubject",
-      curriculum["ابتدائي"]["الصف الأول الابتدائي"],
-      chooser
-    );
+      note.textContent = "تم تحميل المواد من قاعدة البيانات.";
 
-    function updateGrades() {
-      const stage = stageSelect.value;
-      const grades = Object.keys(curriculum[stage]);
+      const stages = Object.keys(curriculum);
+      const stageSelect = addField(
+        "المرحلة التعليمية",
+        "curriculumStage",
+        stages,
+        chooser
+      );
 
-      gradeSelect.replaceChildren();
+      const firstStage = curriculum[selectedStage]
+        ? selectedStage
+        : stages[0];
 
-      grades.forEach((grade) => {
-        const option = document.createElement("option");
-        option.value = grade;
-        option.textContent = grade;
-        gradeSelect.appendChild(option);
-      });
+      stageSelect.value = firstStage;
 
-      updateSubjects();
-    }
+      const gradeSelect = addField(
+        "الصف الدراسي",
+        "curriculumGrade",
+        Object.keys(curriculum[firstStage]),
+        chooser
+      );
 
-    function updateSubjects() {
-      const stage = stageSelect.value;
-      const grade = gradeSelect.value;
-      const subjects = curriculum[stage][grade] || [];
+      const subjectSelect = addField(
+        "المادة",
+        "curriculumSubject",
+        curriculum[firstStage][gradeSelect.value] || [],
+        chooser
+      );
 
-      subjectSelect.replaceChildren();
+      function updateGrades() {
+        const stage = stageSelect.value;
+        const grades = Object.keys(curriculum[stage] || {});
 
-      subjects.forEach((subject) => {
-        const option = document.createElement("option");
-        option.value = subject;
-        option.textContent = subject;
-        subjectSelect.appendChild(option);
-      });
+        gradeSelect.replaceChildren();
 
-      selectedStage = stage;
-      selectedGrade = grade;
-      selectedSubject = subjects[0] || "";
+        grades.forEach((grade) => {
+          const option = document.createElement("option");
+          option.value = grade;
+          option.textContent = grade;
+          gradeSelect.appendChild(option);
+        });
 
-      if ($("studentGrade")) {
-        $("studentGrade").textContent = selectedGrade;
-      }
-    }
-
-    stageSelect.addEventListener("change", updateGrades);
-    gradeSelect.addEventListener("change", updateSubjects);
-
-    subjectSelect.addEventListener("change", () => {
-      selectedStage = stageSelect.value;
-      selectedGrade = gradeSelect.value;
-      selectedSubject = subjectSelect.value;
-    });
-
-    const showButton = document.createElement("button");
-    showButton.type = "button";
-    showButton.className = "primary full";
-    showButton.textContent = "عرض دروس المادة";
-    showButton.addEventListener("click", () => {
-      selectedStage = stageSelect.value;
-      selectedGrade = gradeSelect.value;
-      selectedSubject = subjectSelect.value;
-
-      if (!selectedSubject) {
-        message("اختار المادة أولاً.");
-        return;
+        updateSubjects();
       }
 
-      showLessons();
-    });
+      function updateSubjects() {
+        const stage = stageSelect.value;
+        const grade = gradeSelect.value;
+        const subjects = curriculum[stage]?.[grade] || [];
 
-    chooser.appendChild(showButton);
+        subjectSelect.replaceChildren();
 
-    stageSelect.value = curriculum[selectedStage]
-      ? selectedStage
-      : "ابتدائي";
+        subjects.forEach((subject) => {
+          const option = document.createElement("option");
+          option.value = subject;
+          option.textContent = subject;
+          subjectSelect.appendChild(option);
+        });
 
-    updateGrades();
+        selectedStage = stage;
+        selectedGrade = grade;
+        selectedSubject = subjects[0] || "";
 
-    if (curriculum[stageSelect.value][selectedGrade]) {
-      gradeSelect.value = selectedGrade;
-      updateSubjects();
+        if ($("studentGrade")) {
+          $("studentGrade").textContent = selectedGrade;
+        }
+      }
+
+      stageSelect.addEventListener("change", updateGrades);
+      gradeSelect.addEventListener("change", updateSubjects);
+
+      subjectSelect.addEventListener("change", () => {
+        selectedStage = stageSelect.value;
+        selectedGrade = gradeSelect.value;
+        selectedSubject = subjectSelect.value;
+      });
+
+      const showButton = document.createElement("button");
+      showButton.type = "button";
+      showButton.className = "primary full";
+      showButton.textContent = "عرض دروس المادة";
+      showButton.addEventListener("click", () => {
+        selectedStage = stageSelect.value;
+        selectedGrade = gradeSelect.value;
+        selectedSubject = subjectSelect.value;
+
+        if (!selectedSubject) {
+          message("اختار المادة أولاً.");
+          return;
+        }
+
+        showLessons();
+      });
+
+      chooser.appendChild(showButton);
+      updateGrades();
+
+      if (curriculum[selectedStage]?.[selectedGrade]) {
+        gradeSelect.value = selectedGrade;
+        updateSubjects();
+
+        if (curriculum[selectedStage][selectedGrade].includes(selectedSubject)) {
+          subjectSelect.value = selectedSubject;
+        }
+      }
+
+      setupDashboardButtons();
+    } catch (error) {
+      console.error("Curriculum loading error:", error);
+      note.textContent = "تعذر تحميل المواد: " + error.message;
+      message("راجع اتصال Supabase وصلاحيات قراءة جدول subjects.");
+    } finally {
+      curriculumLoading = false;
     }
-
-    if (curriculum[stageSelect.value][selectedGrade]?.includes(selectedSubject)) {
-      subjectSelect.value = selectedSubject;
-    }
-
-    setupDashboardButtons();
   }
 
   function setupDashboardButtons() {
@@ -435,6 +413,7 @@
   function showLessons() {
     const subject = selectedSubject;
     const lessons = demoLessons[subject] || [];
+
     const section = createSection(
       "studentLessons",
       "📚 " + subject + " — " + selectedGrade,
