@@ -1,4 +1,3 @@
-
 window.currentRole = "student";
 
 window.showAuth = function(role) {
@@ -59,7 +58,9 @@ window.demoLogin = function() {
     window.currentRole === "student" ? "حساب الطالب" : "حساب ولي الأمر";
 
   document.getElementById("dashTitle").textContent =
-    window.currentRole === "student" ? "أهلاً بيك في حسابك" : "أهلاً بيك في متابعة ابنك";
+    window.currentRole === "student"
+      ? "أهلاً بيك في حسابك"
+      : "أهلاً بيك في متابعة ابنك";
 
   if (window.currentRole === "student") {
     document.getElementById("studentGrade").textContent =
