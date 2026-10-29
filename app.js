@@ -125,3 +125,41 @@ window.showParentProgress = function() {
     </section>
   `;
 };
+window.showParentProgress = function() {
+  const parentDash = document.getElementById("parentDash");
+  if (!parentDash) return;
+
+  let report = document.getElementById("parentReport");
+
+  if (!report) {
+    report = document.createElement("div");
+    report.id = "parentReport";
+    report.className = "dash-grid";
+    parentDash.appendChild(report);
+  }
+
+  report.innerHTML = `
+    <article class="panel">
+      <h3>📅 سجل الحضور</h3>
+      <p>الحضور: 4 حصص</p>
+      <p>الغياب: حصة واحدة</p>
+    </article>
+
+    <article class="panel">
+      <h3>📝 درجات الامتحانات</h3>
+      <p>الامتحان الأول: 16 من 20</p>
+      <p>الامتحان الثاني: 18 من 20</p>
+    </article>
+
+    <article class="panel">
+      <h3>📈 التقدم الدراسي</h3>
+      <p>الدروس المكتملة: 8 من 10</p>
+      <progress value="80" max="100"></progress>
+      <p>نسبة الإنجاز: 80%</p>
+    </article>
+
+    <p class="note">
+      تنبيه: هذه بيانات تجريبية للعرض فقط وليست درجات أو سجلات حقيقية.
+    </p>
+  `;
+};
