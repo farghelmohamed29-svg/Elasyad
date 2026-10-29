@@ -4,12 +4,15 @@ window.showAuth = function(role) {
   window.currentRole = role;
 
   document.getElementById("welcome").classList.add("hidden");
-  document.querySelector(".pricing").classList.add("hidden");
-  document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
 
-  document.getElementById("studentFields").classList.toggle("hidden", role !== "student");
-  document.getElementById("parentFields").classList.toggle("hidden", role !== "parent");
+  document.getElementById("studentFields").classList.toggle(
+    "hidden", role !== "student"
+  );
+  document.getElementById("parentFields").classList.toggle(
+    "hidden", role !== "parent"
+  );
 
   document.getElementById("authTitle").textContent =
     role === "student" ? "دخول الطالب" : "دخول ولي الأمر";
@@ -27,6 +30,7 @@ window.goHome = function() {
   document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("welcome").classList.remove("hidden");
   document.querySelector(".pricing").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 window.demoLogin = function() {
@@ -39,18 +43,24 @@ window.demoLogin = function() {
     return;
   }
 
-  if (
-    window.currentRole === "parent" &&
-    document.getElementById("studentCode").value.trim() !== "SAYAD-1024"
-  ) {
-    error.textContent = "اكتب كود الطالب التجريبي SAYAD-1024.";
-    return;
+  if (window.currentRole === "parent") {
+    const code = document.getElementById("studentCode").value.trim();
+
+    if (code !== "SAYAD-1024") {
+      error.textContent = "اكتب كود الطالب التجريبي SAYAD-1024.";
+      return;
+    }
+
+    document.getElementById("linkedStudent").textContent = code;
+  } else {
+    document.getElementById("studentGrade").textContent =
+      document.getElementById("grade").value;
   }
 
   document.getElementById("auth").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
   document.getElementById("welcome").classList.add("hidden");
   document.querySelector(".pricing").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
 
   document.getElementById("studentDash").classList.toggle(
     "hidden", window.currentRole !== "student"
@@ -65,23 +75,16 @@ window.demoLogin = function() {
   document.getElementById("dashTitle").textContent =
     window.currentRole === "student"
       ? "أهلاً بيك في حسابك"
-      : "أهلاً بيك في متابعة ابنك";
-
-  if (window.currentRole === "student") {
-    document.getElementById("studentGrade").textContent =
-      document.getElementById("grade").value;
-  } else {
-    document.getElementById("linkedStudent").textContent =
-      document.getElementById("studentCode").value.trim();
-  }
+      : "متابعة الطالب";
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 window.logout = function() {
-  window.goHome();
   document.getElementById("phone").value = "";
   document.getElementById("password").value = "";
+  document.getElementById("studentCode").value = "";
+  window.goHome();
 };
 
 window.showMessage = function(message) {
@@ -93,7 +96,11 @@ window.showMessage = function(message) {
 
 window.showParentProgress = function() {
   const parentDash = document.getElementById("parentDash");
-  if (!parentDash) return;
+
+  if (!parentDash || parentDash.classList.contains("hidden")) {
+    window.showMessage("ادخل بحساب ولي الأمر أولاً.");
+    return;
+  }
 
   let report = document.getElementById("parentReport");
 
@@ -106,7 +113,7 @@ window.showParentProgress = function() {
 
   report.innerHTML = `
     <article class="panel">
-      <h3>📅 سجل الحضور والغياب</h3>
+      <h3>📅 سجل الحضور</h3>
       <p>الحضور: 4 حصص</p>
       <p>الغياب: حصة واحدة</p>
     </article>
@@ -122,9 +129,20 @@ window.showParentProgress = function() {
       <p>نسبة الإنجاز: 80%</p>
     </article>
     <p class="note">
-      بيانات تجريبية للعرض فقط، وليست سجلات حقيقية.
+      هذه بيانات تجريبية للعرض فقط، وليست سجلات حقيقية للطالب.
     </p>
   `;
 };
 
-window.showParentProgress = window.showParentProgress;
+window.addEventListener("DOMContentLoaded", function() {
+  const parentDash = document.getElementById("parentDash");
+
+  if (parentDash && !document.getElementById("parentProgressButton")) {
+    const button = document.createElement("button");
+    button.id = "parentProgressButton";
+    button.className = "primary full";
+    button.textContent = "عرض تقرير الطالب";
+    button.onclick = window.showParentProgress;
+    parentDash.insertBefore(button, parentDash.firstChild);
+  }
+});
