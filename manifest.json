@@ -1,0 +1,12 @@
+{
+  "name": "الصياد التعليمية - EL SAYAD ACADEMY",
+  "short_name": "الصياد التعليمية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#10233f",
+  "description": "منصة تعليمية تجريبية لجميع المراحل الدراسية",
+  "icons": []
+}

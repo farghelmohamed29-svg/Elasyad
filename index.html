@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10233f">
+  <meta name="description" content="الصياد التعليمية - منصة تعليمية تجريبية">
+  <title>الصياد التعليمية | EL SAYAD ACADEMY</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">ص</div>
+    <div class="brand-copy">
+      <strong>الصياد التعليمية</strong>
+      <span>EL SAYAD ACADEMY</span>
+    </div>
+    <button id="installBtn" class="btn btn-outline hidden">تثبيت التطبيق</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">منصة تعليمية لكل المراحل</div>
+      <h1>اتعلّم بطريقتك،<br><span>وخلّي هدفك قدامك.</span></h1>
+      <p>دروس منظمة، اختبارات قصيرة، ومتابعة لتقدمك — في نموذج أولي يمكنك تجربته وتطويره.</p>
+      <a class="btn btn-gold" href="#learning">ابدأ التعلّم <span aria-hidden="true">←</span></a>
+    </section>
+
+    <section id="learning" class="panel">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">مساحة الطالب</div>
+          <h2>اختار مرحلتك ومادتك</h2>
+        </div>
+        <span class="demo-badge">نسخة تجريبية</span>
+      </div>
+      <div class="form-grid">
+        <label>المرحلة الدراسية
+          <select id="stage">
+            <option value="ابتدائي">ابتدائي</option>
+            <option value="إعدادي">إعدادي</option>
+            <option value="ثانوي" selected>ثانوي</option>
+            <option value="جامعة">جامعة</option>
+          </select>
+        </label>
+        <label>المادة
+          <select id="subject">
+            <option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option>
+            <option>الأحياء</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option>
+            <option>العلوم</option><option>البرمجة</option>
+          </select>
+        </label>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon">▶</div>
+        <div class="lesson-info">
+          <span class="eyebrow">الدرس 01</span>
+          <h3 id="lessonTitle">مقدمة في الفيزياء</h3>
+          <p id="lessonDesc">درس تمهيدي — أضف محتواك التعليمي هنا.</p>
+        </div>
+        <button id="completeBtn" class="btn btn-dark">علّم كمكتمل</button>
+      </div>
+      <div id="completeMessage" class="notice hidden">تم تسجيل الدرس كمكتمل على هذا الجهاز.</div>
+    </section>
+
+    <section class="feature-grid">
+      <article class="feature">
+        <div class="feature-icon">▤</div><h3>مكتبة الدروس</h3>
+        <p>رتّب الفيديوهات والملخصات حسب المرحلة والصف والمادة.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">✓</div><h3>اختبر نفسك</h3>
+        <p>أسئلة قصيرة مع تصحيح فوري وتفسير للإجابة.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">↗</div><h3>تقدمك الدراسي</h3>
+        <p>تابع عدد الدروس التي أكملتها في هذه النسخة التجريبية.</p>
+      </article>
+    </section>
+
+    <section class="panel quiz-panel">
+      <div class="eyebrow">اختبار سريع</div>
+      <h2>جرّب سؤالًا واحدًا</h2>
+      <p class="question">أي وحدة تُستخدم لقياس القوة في النظام الدولي؟</p>
+      <div class="answers" id="answers">
+        <button class="answer" data-correct="false">الجول</button>
+        <button class="answer" data-correct="true">النيوتن</button>
+        <button class="answer" data-correct="false">الواط</button>
+        <button class="answer" data-correct="false">الأمبير</button>
+      </div>
+      <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+    </section>
+
+    <section class="panel progress-panel">
+      <div>
+        <div class="eyebrow">لوحة المتابعة</div>
+        <h2>تقدمك في التعلّم</h2>
+        <p>عدد الدروس المكتملة على هذا الجهاز: <strong id="progressCount">0</strong></p>
+      </div>
+      <div class="progress-ring"><span id="progressPercent">0%</span></div>
+    </section>
+
+    <section class="ai-note">
+      <div class="ai-symbol">AI</div>
+      <div><h2>المساعد التعليمي الذكي</h2>
+      <p>سيُربط في مرحلة لاحقة بخدمة ذكاء اصطناعي آمنة. لا تضع مفاتيح API أو كلمات مرور داخل ملفات الموقع العامة.</p></div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>الصياد التعليمية</strong>
+    <span>EL SAYAD ACADEMY · نموذج أولي للتطوير</span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
