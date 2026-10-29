@@ -8,16 +8,17 @@ window.showAuth = function(role) {
   document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
 
+  document.getElementById("studentFields").classList.toggle("hidden", role !== "student");
+  document.getElementById("parentFields").classList.toggle("hidden", role !== "parent");
+
   document.getElementById("authTitle").textContent =
     role === "student" ? "دخول الطالب" : "دخول ولي الأمر";
 
   document.getElementById("authDesc").textContent =
     role === "student"
-      ? "ادخل بيانات الطالب التجريبية."
-      : "ادخل بيانات ولي الأمر واربط الحساب بكود الطالب.";
+      ? "اكتب بيانات الطالب التجريبية."
+      : "اكتب بيانات ولي الأمر وكود الطالب.";
 
-  document.getElementById("studentFields").classList.toggle("hidden", role !== "student");
-  document.getElementById("parentFields").classList.toggle("hidden", role !== "parent");
   document.getElementById("authError").textContent = "";
 };
 
@@ -34,13 +35,13 @@ window.demoLogin = function() {
   const error = document.getElementById("authError");
 
   if (!phone || !password) {
-    error.textContent = "اكتب رقم الموبايل وكلمة المرور للعرض التجريبي.";
+    error.textContent = "اكتب رقم الموبايل وكلمة المرور.";
     return;
   }
 
   if (
     window.currentRole === "parent" &&
-    !document.getElementById("studentCode").value.trim()
+    document.getElementById("studentCode").value.trim() !== "SAYAD-1024"
   ) {
     error.textContent = "اكتب كود الطالب التجريبي SAYAD-1024.";
     return;
@@ -51,8 +52,12 @@ window.demoLogin = function() {
   document.getElementById("welcome").classList.add("hidden");
   document.querySelector(".pricing").classList.add("hidden");
 
-  document.getElementById("studentDash").classList.toggle("hidden", window.currentRole !== "student");
-  document.getElementById("parentDash").classList.toggle("hidden", window.currentRole !== "parent");
+  document.getElementById("studentDash").classList.toggle(
+    "hidden", window.currentRole !== "student"
+  );
+  document.getElementById("parentDash").classList.toggle(
+    "hidden", window.currentRole !== "parent"
+  );
 
   document.getElementById("roleLabel").textContent =
     window.currentRole === "student" ? "حساب الطالب" : "حساب ولي الأمر";
@@ -85,46 +90,7 @@ window.showMessage = function(message) {
   toast.classList.remove("hidden");
   setTimeout(() => toast.classList.add("hidden"), 3500);
 };
-window.showParentProgress = function() {
-  const container = document.getElementById("parentProgress");
 
-  if (!container) {
-    window.showMessage("لازم نضيف مكان لوحة المتابعة في صفحة HTML أولاً.");
-    return;
-  }
-
-  container.innerHTML = `
-    <section class="progress-panel" dir="rtl">
-      <h2>متابعة الطالب</h2>
-      <p>كود الطالب: ${
-        document.getElementById("linkedStudent")?.textContent || "غير محدد"
-      }</p>
-
-      <div class="progress-card">
-        <h3>الحضور والغياب</h3>
-        <p>الحضور: 4 حصص</p>
-        <p>الغياب: حصة واحدة</p>
-      </div>
-
-      <div class="progress-card">
-        <h3>درجات الامتحانات</h3>
-        <p>الامتحان الأول: 16 من 20</p>
-        <p>الامتحان الثاني: 18 من 20</p>
-      </div>
-
-      <div class="progress-card">
-        <h3>التقدم الدراسي</h3>
-        <p>الدروس المكتملة: 8 من 10</p>
-        <progress value="80" max="100"></progress>
-        <p>نسبة الإنجاز: 80%</p>
-      </div>
-
-      <p class="demo-note">
-        هذه بيانات تجريبية وليست سجلاً حقيقياً للطالب.
-      </p>
-    </section>
-  `;
-};
 window.showParentProgress = function() {
   const parentDash = document.getElementById("parentDash");
   if (!parentDash) return;
@@ -140,26 +106,25 @@ window.showParentProgress = function() {
 
   report.innerHTML = `
     <article class="panel">
-      <h3>📅 سجل الحضور</h3>
+      <h3>📅 سجل الحضور والغياب</h3>
       <p>الحضور: 4 حصص</p>
       <p>الغياب: حصة واحدة</p>
     </article>
-
     <article class="panel">
       <h3>📝 درجات الامتحانات</h3>
       <p>الامتحان الأول: 16 من 20</p>
       <p>الامتحان الثاني: 18 من 20</p>
     </article>
-
     <article class="panel">
       <h3>📈 التقدم الدراسي</h3>
       <p>الدروس المكتملة: 8 من 10</p>
       <progress value="80" max="100"></progress>
       <p>نسبة الإنجاز: 80%</p>
     </article>
-
     <p class="note">
-      تنبيه: هذه بيانات تجريبية للعرض فقط وليست درجات أو سجلات حقيقية.
+      بيانات تجريبية للعرض فقط، وليست سجلات حقيقية.
     </p>
   `;
 };
+
+window.showParentProgress = window.showParentProgress;
