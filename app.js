@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -13,9 +14,79 @@
   const $ = (id) => document.getElementById(id);
 
   const stageMap = {
-    "primary": "ابتدائي",
-    "preparatory": "إعدادي",
-    "secondary": "ثانوي عام"
+    primary: "ابتدائي",
+    preparatory: "إعدادي",
+    secondary: "ثانوي عام"
+  };
+
+  // مواد تجريبية للاستخدام عند تعذر تحميل قاعدة البيانات.
+  const demoCurriculum = {
+    "ابتدائي": {
+      "الصف الرابع الابتدائي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ],
+      "الصف الخامس الابتدائي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ],
+      "الصف السادس الابتدائي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ]
+    },
+    "إعدادي": {
+      "الصف الأول الإعدادي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ],
+      "الصف الثاني الإعدادي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ],
+      "الصف الثالث الإعدادي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "العلوم"
+      ]
+    },
+    "ثانوي عام": {
+      "الصف الأول الثانوي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "الفيزياء",
+        "الكيمياء",
+        "الأحياء"
+      ],
+      "الصف الثاني الثانوي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "الفيزياء",
+        "الكيمياء",
+        "الأحياء"
+      ],
+      "الصف الثالث الثانوي": [
+        "اللغة العربية",
+        "اللغة الإنجليزية",
+        "الرياضيات",
+        "الفيزياء",
+        "الكيمياء",
+        "الأحياء"
+      ]
+    }
   };
 
   const demoLessons = {
@@ -51,6 +122,7 @@
 
   function message(text) {
     const toast = $("toast");
+
     if (!toast) {
       alert(text);
       return;
@@ -58,34 +130,50 @@
 
     toast.textContent = text;
     toast.classList.remove("hidden");
+
     clearTimeout(message.timer);
-    message.timer = setTimeout(
-      () => toast.classList.add("hidden"),
-      3500
-    );
+
+    message.timer = setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 3500);
+  }
+
+  function setText(id, value) {
+    const element = $(id);
+    if (element) element.textContent = value;
   }
 
   function showAuth(role) {
     if (role !== "student" && role !== "parent") return;
+
     currentRole = role;
 
     $("welcome")?.classList.add("hidden");
     $("auth")?.classList.remove("hidden");
     $("dashboard")?.classList.add("hidden");
-    $("studentFields")?.classList.toggle("hidden", role !== "student");
-    $("parentFields")?.classList.toggle("hidden", role !== "parent");
 
-    if ($("authTitle")) {
-      $("authTitle").textContent =
-        role === "student" ? "دخول الطالب" : "دخول ولي الأمر";
-    }
+    $("studentFields")?.classList.toggle(
+      "hidden",
+      role !== "student"
+    );
 
-    if ($("authDesc")) {
-      $("authDesc").textContent =
-        "نسخة تجريبية. لا تستخدم كلمة مرور حقيقية.";
-    }
+    $("parentFields")?.classList.toggle(
+      "hidden",
+      role !== "parent"
+    );
 
-    if ($("authError")) $("authError").textContent = "";
+    setText(
+      "authTitle",
+      role === "student" ? "دخول الطالب" : "دخول ولي الأمر"
+    );
+
+    setText(
+      "authDesc",
+      "دخول تجريبي فقط. لا تستخدم كلمة مرور حقيقية."
+    );
+
+    setText("authError", "");
+
     window.scrollTo(0, 0);
   }
 
@@ -93,7 +181,9 @@
     $("auth")?.classList.add("hidden");
     $("dashboard")?.classList.add("hidden");
     $("welcome")?.classList.remove("hidden");
+
     document.querySelector(".pricing")?.classList.remove("hidden");
+
     window.scrollTo(0, 0);
   }
 
@@ -102,43 +192,72 @@
     const password = $("password");
     const error = $("authError");
 
-    if (!phone?.value.trim() || !password?.value.trim()) {
-      if (error) error.textContent = "اكتب رقم الموبايل وكلمة المرور.";
-      else message("اكتب رقم الموبايل وكلمة المرور.");
+    const phoneValue = phone?.value.trim() || "";
+    const passwordValue = password?.value.trim() || "";
+
+    if (!phoneValue || !passwordValue) {
+      const text = "اكتب رقم الموبايل وكلمة المرور للتجربة.";
+
+      if (error) error.textContent = text;
+      else message(text);
+
       return;
     }
 
+    // هذا تحقق تجريبي محلي فقط وليس نظام حسابات حقيقيًا.
     if (currentRole === "parent") {
-      if ($("studentCode")?.value.trim() !== "SAYAD-1024") {
-        if (error) error.textContent = "كود الطالب التجريبي هو SAYAD-1024.";
-        else message("كود الطالب التجريبي هو SAYAD-1024.");
+      const studentCode = $("studentCode")?.value.trim() || "";
+
+      if (studentCode !== "SAYAD-1024") {
+        const text = "كود الطالب التجريبي هو SAYAD-1024.";
+
+        if (error) error.textContent = text;
+        else message(text);
+
         return;
       }
 
-      if ($("linkedStudent")) {
-        $("linkedStudent").textContent = "SAYAD-1024";
-      }
-    } else {
-      if ($("grade")) selectedGrade = $("grade").value;
-      if ($("studentGrade")) $("studentGrade").textContent = selectedGrade;
+      setText("linkedStudent", "SAYAD-1024");
     }
+
+    if (currentRole === "student") {
+      if ($("grade")) {
+        selectedGrade = $("grade").value || selectedGrade;
+      }
+
+      setText("studentGrade", selectedGrade);
+    }
+
+    setText("authError", "");
 
     $("auth")?.classList.add("hidden");
     $("welcome")?.classList.add("hidden");
+
     document.querySelector(".pricing")?.classList.add("hidden");
+
     $("dashboard")?.classList.remove("hidden");
-    $("studentDash")?.classList.toggle("hidden", currentRole !== "student");
-    $("parentDash")?.classList.toggle("hidden", currentRole !== "parent");
 
-    if ($("roleLabel")) {
-      $("roleLabel").textContent =
-        currentRole === "student" ? "حساب الطالب" : "حساب ولي الأمر";
-    }
+    $("studentDash")?.classList.toggle(
+      "hidden",
+      currentRole !== "student"
+    );
 
-    if ($("dashTitle")) {
-      $("dashTitle").textContent =
-        currentRole === "student" ? "أهلاً بيك في حسابك" : "متابعة الطالب";
-    }
+    $("parentDash")?.classList.toggle(
+      "hidden",
+      currentRole !== "parent"
+    );
+
+    setText(
+      "roleLabel",
+      currentRole === "student" ? "حساب الطالب التجريبي" : "حساب ولي الأمر التجريبي"
+    );
+
+    setText(
+      "dashTitle",
+      currentRole === "student"
+        ? "أهلاً بيك في حسابك"
+        : "متابعة الطالب"
+    );
 
     if (currentRole === "student") {
       setupStudentDashboard();
@@ -169,6 +288,7 @@
 
     wrapper.append(label, select);
     parent.appendChild(wrapper);
+
     return select;
   }
 
@@ -176,7 +296,7 @@
     const client = window.supabaseClient;
 
     if (!client) {
-      throw new Error("اتصال Supabase غير جاهز. حدّث الصفحة وحاول مرة أخرى.");
+      throw new Error("اتصال قاعدة البيانات غير متاح.");
     }
 
     const { data, error } = await client
@@ -198,6 +318,7 @@
       if (!stage || !row.grade_name || !row.name) return;
 
       if (!result[stage]) result[stage] = {};
+
       if (!result[stage][row.grade_name]) {
         result[stage][row.grade_name] = [];
       }
@@ -208,46 +329,69 @@
     });
 
     if (!Object.keys(result).length) {
-      throw new Error("لم يتم العثور على مواد نشطة في قاعدة البيانات.");
+      throw new Error("لا توجد مواد نشطة في جدول subjects.");
     }
 
     curriculum = result;
   }
 
+  function useDemoCurriculum() {
+    curriculum = JSON.parse(JSON.stringify(demoCurriculum));
+  }
+
   async function setupStudentDashboard() {
     const dash = $("studentDash");
-    if (!dash) return;
 
-    let chooser = $("curriculumChooser");
+    if (!dash || curriculumLoading) return;
 
-    if (!chooser) {
-      chooser = document.createElement("section");
-      chooser.id = "curriculumChooser";
-      chooser.className = "panel";
-      chooser.style.maxWidth = "1080px";
-      dash.prepend(chooser);
-    }
-
-    chooser.replaceChildren();
-
-    const title = document.createElement("h3");
-    title.textContent = "📚 اختار مرحلتك وصفك ومادتك";
-
-    const note = document.createElement("p");
-    note.className = "note";
-    note.textContent = "جاري تحميل المواد من قاعدة البيانات...";
-
-    chooser.append(title, note);
-
-    if (curriculumLoading) return;
     curriculumLoading = true;
 
     try {
-      await loadCurriculum();
+      let chooser = $("curriculumChooser");
 
-      note.textContent = "تم تحميل المواد من قاعدة البيانات.";
+      if (!chooser) {
+        chooser = document.createElement("section");
+        chooser.id = "curriculumChooser";
+        chooser.className = "panel";
+        chooser.style.maxWidth = "1080px";
+        dash.prepend(chooser);
+      }
+
+      chooser.replaceChildren();
+
+      const title = document.createElement("h3");
+      title.textContent = "📚 اختار مرحلتك وصفك ومادتك";
+
+      const note = document.createElement("p");
+      note.className = "note";
+      note.textContent = "جاري تحميل المناهج...";
+
+      chooser.append(title, note);
+
+      let usingDemo = false;
+
+      try {
+        await loadCurriculum();
+      } catch (dbError) {
+        console.warn("تعذر تحميل المناهج من Supabase:", dbError);
+        useDemoCurriculum();
+        usingDemo = true;
+      }
+
+      note.textContent = usingDemo
+        ? "أنت تستخدم مواد تجريبية. لم يتم تحميل المناهج من قاعدة البيانات."
+        : "تم تحميل المواد من قاعدة البيانات.";
 
       const stages = Object.keys(curriculum);
+
+      if (!stages.length) {
+        throw new Error("لا توجد مراحل دراسية متاحة.");
+      }
+
+      const firstStage = curriculum[selectedStage]
+        ? selectedStage
+        : stages[0];
+
       const stageSelect = addField(
         "المرحلة التعليمية",
         "curriculumStage",
@@ -255,41 +399,21 @@
         chooser
       );
 
-      const firstStage = curriculum[selectedStage]
-        ? selectedStage
-        : stages[0];
-
       stageSelect.value = firstStage;
 
       const gradeSelect = addField(
         "الصف الدراسي",
         "curriculumGrade",
-        Object.keys(curriculum[firstStage]),
+        Object.keys(curriculum[firstStage] || {}),
         chooser
       );
 
       const subjectSelect = addField(
         "المادة",
         "curriculumSubject",
-        curriculum[firstStage][gradeSelect.value] || [],
+        [],
         chooser
       );
-
-      function updateGrades() {
-        const stage = stageSelect.value;
-        const grades = Object.keys(curriculum[stage] || {});
-
-        gradeSelect.replaceChildren();
-
-        grades.forEach((grade) => {
-          const option = document.createElement("option");
-          option.value = grade;
-          option.textContent = grade;
-          gradeSelect.appendChild(option);
-        });
-
-        updateSubjects();
-      }
 
       function updateSubjects() {
         const stage = stageSelect.value;
@@ -307,11 +431,36 @@
 
         selectedStage = stage;
         selectedGrade = grade;
-        selectedSubject = subjects[0] || "";
 
-        if ($("studentGrade")) {
-          $("studentGrade").textContent = selectedGrade;
+        if (subjects.includes(selectedSubject)) {
+          subjectSelect.value = selectedSubject;
+        } else {
+          selectedSubject = subjects[0] || "";
+          subjectSelect.value = selectedSubject;
         }
+
+        setText("studentGrade", selectedGrade);
+      }
+
+      function updateGrades() {
+        const grades = Object.keys(
+          curriculum[stageSelect.value] || {}
+        );
+
+        gradeSelect.replaceChildren();
+
+        grades.forEach((grade) => {
+          const option = document.createElement("option");
+          option.value = grade;
+          option.textContent = grade;
+          gradeSelect.appendChild(option);
+        });
+
+        if (grades.includes(selectedGrade)) {
+          gradeSelect.value = selectedGrade;
+        }
+
+        updateSubjects();
       }
 
       stageSelect.addEventListener("change", updateGrades);
@@ -327,6 +476,7 @@
       showButton.type = "button";
       showButton.className = "primary full";
       showButton.textContent = "عرض دروس المادة";
+
       showButton.addEventListener("click", () => {
         selectedStage = stageSelect.value;
         selectedGrade = gradeSelect.value;
@@ -341,29 +491,32 @@
       });
 
       chooser.appendChild(showButton);
+
       updateGrades();
-
-      if (curriculum[selectedStage]?.[selectedGrade]) {
-        gradeSelect.value = selectedGrade;
-        updateSubjects();
-
-        if (curriculum[selectedStage][selectedGrade].includes(selectedSubject)) {
-          subjectSelect.value = selectedSubject;
-        }
-      }
-
       setupDashboardButtons();
     } catch (error) {
-      console.error("Curriculum loading error:", error);
-      note.textContent = "تعذر تحميل المواد: " + error.message;
-      message("راجع اتصال Supabase وصلاحيات قراءة جدول subjects.");
+      console.error("خطأ تحميل المناهج:", error);
+
+      const chooser = $("curriculumChooser");
+
+      if (chooser) {
+        const note = document.createElement("p");
+        note.className = "note";
+        note.textContent = "تعذر عرض المناهج. حدّث الصفحة وحاول مرة أخرى.";
+        chooser.appendChild(note);
+      }
+
+      message("تعذر عرض المناهج.");
     } finally {
       curriculumLoading = false;
     }
   }
 
   function setupDashboardButtons() {
-    const cards = $("studentDash")?.querySelectorAll(".dash-grid .panel");
+    const cards = $("studentDash")?.querySelectorAll(
+      ".dash-grid .panel"
+    );
+
     if (!cards || cards.length < 3) return;
 
     const lessonButton = cards[0].querySelector("button");
@@ -407,6 +560,7 @@
     description.textContent = descriptionText;
 
     section.append(title, description);
+
     return section;
   }
 
@@ -418,14 +572,16 @@
       "studentLessons",
       "📚 " + subject + " — " + selectedGrade,
       lessons.length
-        ? "دروس توضيحية تجريبية؛ لم تتم إضافة فيديوهات فعلية بعد."
-        : "لم تتم إضافة دروس تجريبية لهذه المادة حتى الآن."
+        ? "دروس توضيحية تجريبية؛ لا توجد فيديوهات فعلية مرتبطة بعد."
+        : "لم تتم إضافة دروس تجريبية لهذه المادة."
     );
 
     lessons.forEach((lesson, index) => {
       const card = document.createElement("article");
+
       card.style.cssText =
-        "padding:14px;margin:12px 0;border:1px solid #dbe5ee;border-radius:12px;background:#f8fbfd";
+        "padding:14px;margin:12px 0;border:1px solid #dbe5ee;" +
+        "border-radius:12px;background:#f8fbfd";
 
       const title = document.createElement("h4");
       title.textContent = (index + 1) + ". " + lesson.title;
@@ -434,20 +590,25 @@
       duration.textContent = "المدة: " + lesson.duration;
 
       const status = document.createElement("p");
-      status.textContent = "عرض تجريبي";
+      status.textContent = "درس تجريبي";
 
       const button = document.createElement("button");
       button.type = "button";
       button.className = "secondary";
       button.textContent = "فتح الدرس";
-      button.onclick = () =>
-        message("الفيديو الفعلي يحتاج إضافة رابطه وربطه بالاشتراك.");
+
+      button.onclick = () => {
+        message("الفيديو غير مضاف بعد. يجب إضافة رابط الدرس أولاً.");
+      };
 
       card.append(title, duration, status, button);
       section.appendChild(card);
     });
 
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 
   function showExams() {
@@ -459,29 +620,37 @@
 
     ["اختبار قصير", "امتحان مراجعة"].forEach((name, index) => {
       const card = document.createElement("article");
+
       card.style.cssText =
-        "padding:14px;margin:12px 0;border:1px solid #dbe5ee;border-radius:12px";
+        "padding:14px;margin:12px 0;border:1px solid #dbe5ee;" +
+        "border-radius:12px";
 
       const title = document.createElement("h4");
       title.textContent = name;
 
       const details = document.createElement("p");
       details.textContent =
-        "الصف: " + selectedGrade + " — المادة: " + selectedSubject +
+        "الصف: " + selectedGrade +
+        " — المادة: " + selectedSubject +
         " — عدد الأسئلة: " + (index === 0 ? 10 : 20);
 
       const button = document.createElement("button");
       button.type = "button";
       button.className = "primary";
       button.textContent = "بدء الامتحان";
-      button.onclick = () =>
+
+      button.onclick = () => {
         message("نظام الامتحانات والتصحيح لم يتم تفعيله بعد.");
+      };
 
       card.append(title, details, button);
       section.appendChild(card);
     });
 
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 
   function showLiveLessons() {
@@ -493,19 +662,28 @@
 
     ["حصة شرح ومراجعة", "حل مسائل وتدريبات"].forEach((name) => {
       const row = document.createElement("p");
-      row.style.cssText = "padding:12px;border-bottom:1px solid #dbe5ee";
+
+      row.style.cssText =
+        "padding:12px;border-bottom:1px solid #dbe5ee";
+
       row.textContent = "📅 " + name + " — الموعد غير محدد";
+
       section.appendChild(row);
     });
 
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 
   function addReportButton() {
     const parentDash = $("parentDash");
+
     if (!parentDash || $("parentProgressButton")) return;
 
     const button = document.createElement("button");
+
     button.id = "parentProgressButton";
     button.type = "button";
     button.textContent = "عرض تقرير الطالب";
@@ -536,8 +714,11 @@
     }
 
     report.className = "panel";
+
     report.style.cssText =
-      "display:block;max-width:100%;box-sizing:border-box;margin:20px 0;padding:20px;background:#fff;color:#222;border:1px solid #dbe5ee;border-radius:12px";
+      "display:block;max-width:100%;box-sizing:border-box;" +
+      "margin:20px 0;padding:20px;background:#fff;color:#222;" +
+      "border:1px solid #dbe5ee;border-radius:12px";
 
     report.replaceChildren();
 
@@ -547,16 +728,18 @@
     const note = document.createElement("p");
     note.className = "note";
     note.textContent =
-      "بيانات تجريبية للعرض فقط؛ لم يتم ربط التقرير بسجلات حقيقية.";
+      "هذه بيانات تجريبية وليست سجلات حقيقية للطالب.";
 
     const attendance = document.createElement("p");
-    attendance.textContent = "📅 الحضور: 4 حصص — الغياب: حصة واحدة";
+    attendance.textContent =
+      "📅 الحضور: 4 حصص — الغياب: حصة واحدة";
 
     const gradesTitle = document.createElement("h3");
     gradesTitle.textContent = "📝 درجات الامتحانات";
 
     const grades = document.createElement("p");
-    grades.textContent = "الامتحان الأول: 16 من 20 — الثاني: 18 من 20";
+    grades.textContent =
+      "الامتحان الأول: 16 من 20 — الثاني: 18 من 20";
 
     const progressTitle = document.createElement("h3");
     progressTitle.textContent = "📈 التقدم الدراسي";
@@ -567,19 +750,30 @@
     progress.style.width = "100%";
 
     const progressText = document.createElement("p");
-    progressText.textContent = "الدروس المكتملة: 8 من 10 — الإنجاز: 80%";
+    progressText.textContent =
+      "الدروس المكتملة: 8 من 10 — الإنجاز: 80%";
 
     report.append(
-      title, note, attendance, gradesTitle, grades,
-      progressTitle, progress, progressText
+      title,
+      note,
+      attendance,
+      gradesTitle,
+      grades,
+      progressTitle,
+      progress,
+      progressText
     );
 
-    report.scrollIntoView({ behavior: "smooth", block: "start" });
+    report.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 
   function logout() {
     ["phone", "password", "studentCode"].forEach((id) => {
-      if ($(id)) $(id).value = "";
+      const field = $(id);
+      if (field) field.value = "";
     });
 
     currentRole = "student";
