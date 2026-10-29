@@ -146,3 +146,30 @@ window.addEventListener("DOMContentLoaded", function() {
     parentDash.insertBefore(button, parentDash.firstChild);
   }
 });
+
+window.addEventListener("load", function () {
+  const parentDash = document.getElementById("parentDash");
+
+  if (!parentDash) {
+    alert("مش لاقي لوحة ولي الأمر في الصفحة");
+    return;
+  }
+
+  if (document.getElementById("parentProgressButton")) return;
+
+  const button = document.createElement("button");
+  button.id = "parentProgressButton";
+  button.className = "primary full";
+  button.textContent = "عرض تقرير الطالب";
+  button.style.display = "block";
+  button.style.margin = "20px 0";
+  button.onclick = function () {
+    if (typeof window.showParentProgress === "function") {
+      window.showParentProgress();
+    } else {
+      alert("دالة التقرير مش موجودة في app.js");
+    }
+  };
+
+  parentDash.insertBefore(button, parentDash.firstChild);
+});
