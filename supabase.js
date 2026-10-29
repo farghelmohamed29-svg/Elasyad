@@ -1,12 +1,15 @@
 (() => {
-  const SUPABASE_URL = "https://nakcvafzzvikfsjvwhpz.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_CxPLNlSByHUFgUDXqwdKaw_0OSOQp8I";
+  const SUPABASE_URL =
+    "https://nakcvafzzvikfsjvwhpz.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_CxPLNlSByHUFgUDXqwdKaw_0OSOQp8I";
 
   function showStatus(message) {
     let box = document.getElementById("connectionStatus");
 
     if (!box) {
-      box = document.createElement("p");
+      box = document.createElement("div");
       box.id = "connectionStatus";
       box.style.cssText =
         "position:fixed;bottom:12px;left:12px;right:12px;" +
@@ -19,55 +22,42 @@
   }
 
   async function testConnection() {
-    showStatus("جاري التحقق من الاتصال...");
-
     if (!window.supabase?.createClient) {
       showStatus("خطأ: مكتبة Supabase لم يتم تحميلها.");
-      console.error("Supabase JS library is unavailable.");
       return;
     }
 
-    if (
-      !SUPABASE_URL.startsWith("https://") ||
-      SUPABASE_ANON_KEY === "sb_publishable_CxPLNlSByHUFgUDXqwdKaw_0OSOQp8I" ||
-      !SUPABASE_ANON_KEY.trim()
-    ) {
-      showStatus("خطأ: راجع رابط المشروع والمفتاح العام.");
-      return;
-    }
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    window.supabaseClient = client;
+    showStatus("جاري اختبار الاتصال...");
 
     try {
-      const client = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
-
       const { error } = await client
         .from("subjects")
         .select("*")
         .limit(1);
 
       if (error) {
-        console.error("Supabase diagnostic:", {
+        console.error("Supabase error:", {
           message: error.message,
           code: error.code,
-          details: error.details,
-          hint: error.hint
+          details: error.details
         });
 
         showStatus(
-          "فشل الاختبار: " +
-          error.message +
-          (error.code ? " — " + error.code : "")
+          "خطأ قاعدة البيانات: " + error.message
         );
         return;
       }
 
-      window.supabaseClient = client;
-      showStatus("نجح الاتصال والقراءة من جدول subjects ✅");
+      showStatus("تم الاتصال بقاعدة البيانات بنجاح ✅");
     } catch (error) {
-      console.error("Unexpected Supabase error:", error);
-      showStatus("حدث خطأ أثناء الاختبار. راجع وحدة التحكم.");
+      console.error("Supabase connection error:", error);
+      showStatus("تعذر الاتصال. راجع إعدادات المشروع.");
     }
   }
 
