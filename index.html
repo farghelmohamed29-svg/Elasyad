@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#102a43">
   <title>الصياد التعليمية | EL SAYAD ACADEMY</title>
   <link rel="stylesheet" href="style.css">
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
 </head>
 <body>
 
@@ -52,25 +58,16 @@
 
     <div class="field">
       <label for="phone">رقم الموبايل</label>
-      <input
-        id="phone"
-        name="phone"
-        type="tel"
-        inputmode="tel"
-        autocomplete="tel"
-        placeholder="مثال: 01xxxxxxxxx"
-      >
+      <input id="phone" name="phone" type="tel"
+        inputmode="tel" autocomplete="tel"
+        placeholder="مثال: 01xxxxxxxxx">
     </div>
 
     <div class="field">
       <label for="password">كلمة المرور</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
+      <input id="password" name="password" type="password"
         autocomplete="current-password"
-        placeholder="اكتب كلمة المرور"
-      >
+        placeholder="اكتب كلمة المرور">
     </div>
 
     <div id="studentFields" class="field hidden">
@@ -84,13 +81,9 @@
 
     <div id="parentFields" class="field hidden">
       <label for="studentCode">كود الطالب المرتبط بالحساب</label>
-      <input
-        id="studentCode"
-        name="studentCode"
-        type="text"
-        autocomplete="off"
-        placeholder="كود الطالب"
-      >
+      <input id="studentCode" name="studentCode"
+        type="text" autocomplete="off"
+        placeholder="كود الطالب">
     </div>
 
     <button type="button" class="primary full" onclick="demoLogin()">
@@ -138,7 +131,8 @@
             <option>اللغة العربية</option>
             <option>اللغة الإنجليزية</option>
           </select>
-          <button type="button" class="primary full" onclick="showMessage('الدروس هتظهر بعد ربط محتواها بقاعدة البيانات.')">
+          <button type="button" class="primary full"
+            onclick="showMessage('الدروس هتظهر بعد ربط محتواها بقاعدة البيانات.')">
             عرض الدروس
           </button>
         </article>
@@ -146,7 +140,8 @@
         <article class="panel">
           <h3>📝 الامتحانات</h3>
           <p>هنا هتظهر الامتحانات والدرجات بعد تفعيل النظام.</p>
-          <button type="button" class="secondary full" onclick="showMessage('قسم الامتحانات لسه تجريبي.')">
+          <button type="button" class="secondary full"
+            onclick="showMessage('قسم الامتحانات لسه تجريبي.')">
             فتح الامتحانات
           </button>
         </article>
@@ -154,7 +149,8 @@
         <article class="panel">
           <h3>📡 الحصص المباشرة</h3>
           <p>رابط الحصة وموعدها هيظهروا هنا.</p>
-          <button type="button" class="secondary full" onclick="showMessage('الحصص المباشرة لسه تحت التجهيز.')">
+          <button type="button" class="secondary full"
+            onclick="showMessage('الحصص المباشرة لسه تحت التجهيز.')">
             جدول الحصص
           </button>
         </article>
@@ -194,6 +190,68 @@
     </div>
   </section>
 
+  <!-- نموذج طلب الاشتراك -->
+  <section id="subscription" class="panel">
+    <h2>📝 طلب اشتراك جديد</h2>
+    <p class="muted">
+      املأ البيانات وارفع إيصال الدفع. الاشتراك لا يتفعل إلا بعد مراجعة الإدارة.
+    </p>
+
+    <form id="subscriptionForm" enctype="multipart/form-data">
+      <div class="field">
+        <label for="subFullName">اسم الطالب بالكامل</label>
+        <input id="subFullName" name="full_name"
+          type="text" required maxlength="120">
+      </div>
+
+      <div class="field">
+        <label for="subPhone">رقم الموبايل</label>
+        <input id="subPhone" name="phone"
+          type="tel" inputmode="tel"
+          placeholder="01xxxxxxxxx" required>
+      </div>
+
+      <div class="field">
+        <label for="subStage">المرحلة التعليمية</label>
+        <select id="subStage" name="grade_level" required>
+          <option value="">اختر المرحلة</option>
+          <option value="primary">ابتدائي</option>
+          <option value="preparatory">إعدادي</option>
+          <option value="secondary">ثانوي</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="subGrade">الصف الدراسي</label>
+        <select id="subGrade" name="grade_name" required>
+          <option value="">اختر الصف</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="receipt">إيصال الدفع</label>
+        <input id="receipt" name="receipt" type="file"
+          accept=".jpg,.jpeg,.png,.webp,.pdf"
+          required>
+        <small>الحد الأقصى 5 ميجابايت.</small>
+      </div>
+
+      <div class="field">
+        <label>التحقق الأمني</label>
+        <div class="cf-turnstile"
+          data-sitekey="0x4AAAAAAFrx5YDAVlfVN-bw">
+        </div>
+      </div>
+
+      <button id="subscriptionSubmit" type="submit"
+        class="primary full">
+        إرسال طلب الاشتراك
+      </button>
+
+      <p id="subscriptionMessage" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
   <section class="pricing">
     <div class="section-heading">
       <p class="eyebrow">اشتراكات أسبوعية</p>
@@ -207,13 +265,11 @@
         <strong>20 <small>جنيه / أسبوع</small></strong>
         <p>دروس ومتابعة حسب المواد المتاحة.</p>
       </article>
-
       <article class="price-card">
         <span>إعدادي</span>
         <strong>50 <small>جنيه / أسبوع</small></strong>
         <p>دروس وامتحانات ومتابعة.</p>
       </article>
-
       <article class="price-card">
         <span>ثانوي</span>
         <strong>100 <small>جنيه / أسبوع</small></strong>
@@ -233,7 +289,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js?v=8"></script>
-<script src="app.js?v=9"></script>
+<script src="app.js?v=10"></script>
 
 </body>
 </html>
