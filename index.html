@@ -1,117 +1,107 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10233f">
-  <meta name="description" content="الصياد التعليمية - منصة تعليمية تجريبية">
-  <title>الصياد التعليمية | EL SAYAD ACADEMY</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102a43">
+<title>الصياد التعليمية | EL SAYAD ACADEMY</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-mark">ص</div>
-    <div class="brand-copy">
-      <strong>الصياد التعليمية</strong>
-      <span>EL SAYAD ACADEMY</span>
+<header class="topbar">
+  <div class="brand-mark">ص</div>
+  <div><strong>الصياد التعليمية</strong><small>EL SAYAD ACADEMY</small></div>
+  <span class="demo-tag">نسخة تجريبية</span>
+</header>
+<main>
+<section id="welcome" class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">التعلّم بقى أسهل</p>
+    <h1>أهلاً بيك في<br><span>منصة الصياد التعليمية</span></h1>
+    <p>دروس مسجلة، حصص مباشرة، امتحانات، ومتابعة للطالب وولي الأمر من مكان واحد.</p>
+    <div class="hero-actions">
+      <button class="primary" onclick="showAuth('student')">دخول الطالب</button>
+      <button class="secondary" onclick="showAuth('parent')">دخول ولي الأمر</button>
     </div>
-    <button id="installBtn" class="btn btn-outline hidden">تثبيت التطبيق</button>
-  </header>
+    <p class="note">دي نسخة تجريبية للواجهة؛ الحسابات الحقيقية وحفظ البيانات بين الأجهزة محتاجين قاعدة بيانات وخادم.</p>
+  </div>
+  <div class="hero-card">
+    <div class="card-icon">🎓</div>
+    <h3>كل حاجة في مكان واحد</h3>
+    <div class="feature">▶️ <span>فيديوهات شرح مسجلة</span></div>
+    <div class="feature">📡 <span>حصص مباشرة</span></div>
+    <div class="feature">📝 <span>امتحانات ودرجات</span></div>
+    <div class="feature">👨‍👩‍👧 <span>متابعة ولي الأمر</span></div>
+  </div>
+</section>
 
-  <main>
-    <section class="hero">
-      <div class="eyebrow">منصة تعليمية لكل المراحل</div>
-      <h1>اتعلّم بطريقتك،<br><span>وخلّي هدفك قدامك.</span></h1>
-      <p>دروس منظمة، اختبارات قصيرة، ومتابعة لتقدمك — في نموذج أولي يمكنك تجربته وتطويره.</p>
-      <a class="btn btn-gold" href="#learning">ابدأ التعلّم <span aria-hidden="true">←</span></a>
-    </section>
+<section id="auth" class="panel hidden">
+  <button class="back" onclick="goHome()">← رجوع</button>
+  <h2 id="authTitle">تسجيل الدخول</h2>
+  <p id="authDesc" class="muted">اكتب بيانات الحساب التجريبي.</p>
+  <div class="field"><label for="phone">رقم الموبايل</label><input id="phone" inputmode="tel" placeholder="مثال: 01xxxxxxxxx"></div>
+  <div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" placeholder="اكتب كلمة المرور"></div>
+  <div id="studentFields" class="field hidden">
+    <label for="grade">المرحلة الدراسية</label>
+    <select id="grade"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option></select>
+  </div>
+  <div id="parentFields" class="field hidden">
+    <label for="studentCode">كود الطالب المرتبط بالحساب</label>
+    <input id="studentCode" placeholder="مثال: SAYAD-1024">
+  </div>
+  <button class="primary full" onclick="demoLogin()">دخول تجريبي</button>
+  <p id="authError" class="error"></p>
+  <p class="note">مهم: ما تستخدمش كلمة مرور حقيقية هنا؛ التسجيل في النسخة دي تجريبي فقط.</p>
+</section>
 
-    <section id="learning" class="panel">
-      <div class="section-heading">
-        <div>
-          <div class="eyebrow">مساحة الطالب</div>
-          <h2>اختار مرحلتك ومادتك</h2>
-        </div>
-        <span class="demo-badge">نسخة تجريبية</span>
-      </div>
-      <div class="form-grid">
-        <label>المرحلة الدراسية
-          <select id="stage">
-            <option value="ابتدائي">ابتدائي</option>
-            <option value="إعدادي">إعدادي</option>
-            <option value="ثانوي" selected>ثانوي</option>
-            <option value="جامعة">جامعة</option>
-          </select>
-        </label>
-        <label>المادة
-          <select id="subject">
-            <option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option>
-            <option>الأحياء</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option>
-            <option>العلوم</option><option>البرمجة</option>
-          </select>
-        </label>
-      </div>
-      <div class="lesson-card">
-        <div class="lesson-icon">▶</div>
-        <div class="lesson-info">
-          <span class="eyebrow">الدرس 01</span>
-          <h3 id="lessonTitle">مقدمة في الفيزياء</h3>
-          <p id="lessonDesc">درس تمهيدي — أضف محتواك التعليمي هنا.</p>
-        </div>
-        <button id="completeBtn" class="btn btn-dark">علّم كمكتمل</button>
-      </div>
-      <div id="completeMessage" class="notice hidden">تم تسجيل الدرس كمكتمل على هذا الجهاز.</div>
-    </section>
-
-    <section class="feature-grid">
-      <article class="feature">
-        <div class="feature-icon">▤</div><h3>مكتبة الدروس</h3>
-        <p>رتّب الفيديوهات والملخصات حسب المرحلة والصف والمادة.</p>
+<section id="dashboard" class="hidden">
+  <div class="dash-head">
+    <div><p class="eyebrow" id="roleLabel">لوحة التحكم</p><h2 id="dashTitle">أهلاً بيك</h2></div>
+    <button class="secondary small" onclick="logout()">تسجيل خروج</button>
+  </div>
+  <div id="studentDash" class="hidden">
+    <div class="stats">
+      <article class="stat"><span>المرحلة</span><strong id="studentGrade">—</strong></article>
+      <article class="stat"><span>الاشتراك</span><strong>أسبوعي</strong></article>
+      <article class="stat"><span>الحضور</span><strong>تجريبي</strong></article>
+    </div>
+    <div class="dash-grid">
+      <article class="panel"><h3>📚 دروسي</h3><p>اختار المادة علشان تعرض الدروس المتاحة.</p>
+        <label for="subject">المادة</label><select id="subject"><option>الفيزياء</option><option>الرياضيات</option><option>العلوم</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option></select>
+        <button class="primary full" onclick="showMessage('قريبًا: ربط الدروس المسجلة بالحساب.')">عرض الدروس</button>
       </article>
-      <article class="feature">
-        <div class="feature-icon">✓</div><h3>اختبر نفسك</h3>
-        <p>أسئلة قصيرة مع تصحيح فوري وتفسير للإجابة.</p>
-      </article>
-      <article class="feature">
-        <div class="feature-icon">↗</div><h3>تقدمك الدراسي</h3>
-        <p>تابع عدد الدروس التي أكملتها في هذه النسخة التجريبية.</p>
-      </article>
-    </section>
+      <article class="panel"><h3>📝 الامتحانات</h3><p>هنا هتظهر الامتحانات والدرجات بعد ربط قاعدة البيانات.</p><button class="secondary full" onclick="showMessage('قسم الامتحانات واجهة تجريبية ولسه مش بيحفظ درجات.')">فتح الامتحانات</button></article>
+      <article class="panel"><h3>📡 الحصص المباشرة</h3><p>رابط الحصة وموعدها هيظهروا هنا.</p><button class="secondary full" onclick="showMessage('الحصص المباشرة تحتاج ربط خدمة بث أو اجتماع.')">جدول الحصص</button></article>
+    </div>
+    <p class="note">كود الطالب التجريبي للربط: <b>SAYAD-1024</b> — في النسخة الحقيقية كل طالب هيكون له كود خاص.</p>
+  </div>
+  <div id="parentDash" class="hidden">
+    <div class="stats">
+      <article class="stat"><span>الطالب المرتبط</span><strong id="linkedStudent">—</strong></article>
+      <article class="stat"><span>الحضور والغياب</span><strong>متابعة</strong></article>
+      <article class="stat"><span>الدرجات</span><strong>تجريبي</strong></article>
+    </div>
+    <div class="dash-grid">
+      <article class="panel"><h3>📅 الحضور والغياب</h3><p>هيظهر سجل الحضور، مع تنبيه ولي الأمر عند حضور الطالب أو غيابه عن الحصة.</p></article>
+      <article class="panel"><h3>📊 درجات الامتحانات</h3><p>هتظهر درجات كل امتحان وتاريخ أدائه بعد تفعيل النظام.</p></article>
+      <article class="panel"><h3>📈 متابعة التقدم</h3><p>متابعة الدروس اللي اتشافَت والدروس المتبقية ونسبة التقدم.</p></article>
+    </div>
+    <p class="note">تنبيهات الموبايل وواتساب مش مفعّلة في النسخة دي، وهنضيفها بعد تجهيز الخادم وربط وسيلة الإرسال.</p>
+  </div>
+</section>
 
-    <section class="panel quiz-panel">
-      <div class="eyebrow">اختبار سريع</div>
-      <h2>جرّب سؤالًا واحدًا</h2>
-      <p class="question">أي وحدة تُستخدم لقياس القوة في النظام الدولي؟</p>
-      <div class="answers" id="answers">
-        <button class="answer" data-correct="false">الجول</button>
-        <button class="answer" data-correct="true">النيوتن</button>
-        <button class="answer" data-correct="false">الواط</button>
-        <button class="answer" data-correct="false">الأمبير</button>
-      </div>
-      <p id="quizFeedback" class="feedback" aria-live="polite"></p>
-    </section>
-
-    <section class="panel progress-panel">
-      <div>
-        <div class="eyebrow">لوحة المتابعة</div>
-        <h2>تقدمك في التعلّم</h2>
-        <p>عدد الدروس المكتملة على هذا الجهاز: <strong id="progressCount">0</strong></p>
-      </div>
-      <div class="progress-ring"><span id="progressPercent">0%</span></div>
-    </section>
-
-    <section class="ai-note">
-      <div class="ai-symbol">AI</div>
-      <div><h2>المساعد التعليمي الذكي</h2>
-      <p>سيُربط في مرحلة لاحقة بخدمة ذكاء اصطناعي آمنة. لا تضع مفاتيح API أو كلمات مرور داخل ملفات الموقع العامة.</p></div>
-    </section>
-  </main>
-
-  <footer>
-    <strong>الصياد التعليمية</strong>
-    <span>EL SAYAD ACADEMY · نموذج أولي للتطوير</span>
-  </footer>
-  <script src="app.js"></script>
+<section class="pricing">
+  <div class="section-heading"><p class="eyebrow">اشتراكات أسبوعية</p><h2>اختار مرحلتك</h2><p class="muted">الأسعار حسب آخر تحديد مبدئي، وتقدر تعدّلها قبل الإطلاق.</p></div>
+  <div class="price-grid">
+    <article class="price-card"><span>ابتدائي</span><strong>20 <small>جنيه / أسبوع</small></strong><p>دروس ومتابعة حسب المواد المتاحة.</p></article>
+    <article class="price-card"><span>إعدادي</span><strong>50 <small>جنيه / أسبوع</small></strong><p>دروس وامتحانات ومتابعة.</p></article>
+    <article class="price-card"><span>ثانوي</span><strong>100 <small>جنيه / أسبوع</small></strong><p>دروس ومراجعات وامتحانات.</p></article>
+  </div>
+  <div class="payment-note">💳 الدفع المقترح: فودافون كاش، مع مراجعة التحويل وتفعيل الاشتراك يدويًا في البداية.</div>
+</section>
+</main>
+<footer>© الصياد التعليمية — EL SAYAD ACADEMY</footer>
+<div id="toast" role="status" class="toast hidden"></div>
+<script src="app.js"></script>
 </body>
 </html>

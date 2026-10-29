@@ -1,60 +1,41 @@
-const stage = document.querySelector("#stage");
-const subject = document.querySelector("#subject");
-const lessonTitle = document.querySelector("#lessonTitle");
-const lessonDesc = document.querySelector("#lessonDesc");
-const completeBtn = document.querySelector("#completeBtn");
-const completeMessage = document.querySelector("#completeMessage");
-const progressCount = document.querySelector("#progressCount");
-const progressPercent = document.querySelector("#progressPercent");
-
-let completed = localStorage.getItem("sayad-lesson-completed") === "true";
-
-function updateLesson() {
-  lessonTitle.textContent = `مقدمة في ${subject.value}`;
-  lessonDesc.textContent = `المرحلة: ${stage.value} · أضف شرح ${subject.value} هنا.`;
+let currentRole = "student";
+function showAuth(role){
+  currentRole=role;
+  document.getElementById('welcome').classList.add('hidden');
+  document.querySelector('.pricing').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('auth').classList.remove('hidden');
+  document.getElementById('authTitle').textContent=role==='student'?'دخول الطالب':'دخول ولي الأمر';
+  document.getElementById('authDesc').textContent=role==='student'?'ادخل بيانات الطالب التجريبية.':'ادخل بيانات ولي الأمر واربط الحساب بكود الطالب.';
+  document.getElementById('studentFields').classList.toggle('hidden',role!=='student');
+  document.getElementById('parentFields').classList.toggle('hidden',role!=='parent');
+  document.getElementById('authError').textContent='';
 }
-function updateProgress() {
-  progressCount.textContent = completed ? "1" : "0";
-  progressPercent.textContent = completed ? "100%" : "0%";
-  completeBtn.textContent = completed ? "إلغاء الإكمال" : "علّم كمكتمل";
-  completeMessage.classList.toggle("hidden", !completed);
+function goHome(){
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('welcome').classList.remove('hidden');
+  document.querySelector('.pricing').classList.remove('hidden');
 }
-stage.addEventListener("change", updateLesson);
-subject.addEventListener("change", updateLesson);
-completeBtn.addEventListener("click", () => {
-  completed = !completed;
-  localStorage.setItem("sayad-lesson-completed", String(completed));
-  updateProgress();
-});
-
-document.querySelectorAll(".answer").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".answer").forEach(b => b.classList.remove("correct", "wrong"));
-    const correct = button.dataset.correct === "true";
-    button.classList.add(correct ? "correct" : "wrong");
-    document.querySelector("#quizFeedback").textContent = correct
-      ? "إجابة صحيحة! القوة تُقاس بالنيوتن."
-      : "مش دي الإجابة. فكّر في وحدة قياس القوة في النظام الدولي.";
-  });
-});
-
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+function demoLogin(){
+  const phone=document.getElementById('phone').value.trim();
+  const password=document.getElementById('password').value.trim();
+  if(!phone||!password){document.getElementById('authError').textContent='اكتب رقم الموبايل وكلمة المرور للعرض التجريبي.';return;}
+  if(currentRole==='parent'&&!document.getElementById('studentCode').value.trim()){document.getElementById('authError').textContent='اكتب كود الطالب التجريبي SAYAD-1024.';return;}
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('welcome').classList.add('hidden');
+  document.querySelector('.pricing').classList.add('hidden');
+  document.getElementById('studentDash').classList.toggle('hidden',currentRole!=='student');
+  document.getElementById('parentDash').classList.toggle('hidden',currentRole!=='parent');
+  document.getElementById('roleLabel').textContent=currentRole==='student'?'حساب الطالب':'حساب ولي الأمر';
+  document.getElementById('dashTitle').textContent=currentRole==='student'?'أهلاً بيك في حسابك':'أهلاً بيك في متابعة ابنك';
+  if(currentRole==='student')document.getElementById('studentGrade').textContent=document.getElementById('grade').value;
+  else document.getElementById('linkedStudent').textContent=document.getElementById('studentCode').value.trim();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-let installPrompt;
-const installBtn = document.querySelector("#installBtn");
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  installPrompt = event;
-  installBtn.classList.remove("hidden");
-});
-installBtn.addEventListener("click", async () => {
-  if (!installPrompt) return;
-  installPrompt.prompt();
-  await installPrompt.userChoice;
-  installPrompt = null;
-  installBtn.classList.add("hidden");
-});
-updateLesson();
-updateProgress();
+function logout(){goHome();document.getElementById('phone').value='';document.getElementById('password').value='';}
+function showMessage(message){
+  const toast=document.getElementById('toast');toast.textContent=message;toast.classList.remove('hidden');
+  setTimeout(()=>toast.classList.add('hidden'),3500);
+}
