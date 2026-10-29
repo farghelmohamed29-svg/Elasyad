@@ -1,4 +1,3 @@
-
 (function () {
   "use strict";
 
@@ -19,72 +18,41 @@
     secondary: "ثانوي عام"
   };
 
-  // مواد تجريبية للاستخدام عند تعذر تحميل قاعدة البيانات.
   const demoCurriculum = {
     "ابتدائي": {
       "الصف الرابع الابتدائي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ],
       "الصف الخامس الابتدائي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ],
       "الصف السادس الابتدائي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ]
     },
     "إعدادي": {
       "الصف الأول الإعدادي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ],
       "الصف الثاني الإعدادي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ],
       "الصف الثالث الإعدادي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "العلوم"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات", "العلوم"
       ]
     },
     "ثانوي عام": {
       "الصف الأول الثانوي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "الفيزياء",
-        "الكيمياء",
-        "الأحياء"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
+        "الفيزياء", "الكيمياء", "الأحياء"
       ],
       "الصف الثاني الثانوي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "الفيزياء",
-        "الكيمياء",
-        "الأحياء"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
+        "الفيزياء", "الكيمياء", "الأحياء"
       ],
       "الصف الثالث الثانوي": [
-        "اللغة العربية",
-        "اللغة الإنجليزية",
-        "الرياضيات",
-        "الفيزياء",
-        "الكيمياء",
-        "الأحياء"
+        "اللغة العربية", "اللغة الإنجليزية", "الرياضيات",
+        "الفيزياء", "الكيمياء", "الأحياء"
       ]
     }
   };
@@ -204,7 +172,6 @@
       return;
     }
 
-    // هذا تحقق تجريبي محلي فقط وليس نظام حسابات حقيقيًا.
     if (currentRole === "parent") {
       const studentCode = $("studentCode")?.value.trim() || "";
 
@@ -249,7 +216,9 @@
 
     setText(
       "roleLabel",
-      currentRole === "student" ? "حساب الطالب التجريبي" : "حساب ولي الأمر التجريبي"
+      currentRole === "student"
+        ? "حساب الطالب التجريبي"
+        : "حساب ولي الأمر التجريبي"
     );
 
     setText(
@@ -780,16 +749,145 @@
     goHome();
   }
 
+  // ===== نموذج الاشتراك وإرسال إيصال الدفع =====
+
+  function setupSubscriptionForm() {
+    const form = $("subscriptionForm");
+    const stage = $("subStage");
+    const grade = $("subGrade");
+    const button = $("subscriptionSubmit");
+    const output = $("subscriptionMessage");
+
+    if (!form || !stage || !grade || !button || !output) return;
+
+    const grades = {
+      primary: [
+        "الصف الرابع الابتدائي",
+        "الصف الخامس الابتدائي",
+        "الصف السادس الابتدائي"
+      ],
+      preparatory: [
+        "الصف الأول الإعدادي",
+        "الصف الثاني الإعدادي",
+        "الصف الثالث الإعدادي"
+      ],
+      secondary: [
+        "الصف الأول الثانوي",
+        "الصف الثاني الثانوي",
+        "الصف الثالث الثانوي"
+      ]
+    };
+
+    stage.addEventListener("change", () => {
+      grade.replaceChildren();
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "اختر الصف";
+      grade.appendChild(placeholder);
+
+      (grades[stage.value] || []).forEach((name) => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        grade.appendChild(option);
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      output.textContent = "";
+
+      const file = $("receipt")?.files?.[0];
+
+      if (!file) {
+        output.textContent = "من فضلك ارفع إيصال الدفع.";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        output.textContent = "حجم الإيصال يجب ألا يتجاوز 5 ميجابايت.";
+        return;
+      }
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        output.textContent = "نوع الملف غير مدعوم.";
+        return;
+      }
+
+      const token = form.querySelector(
+        '[name="cf-turnstile-response"]'
+      )?.value;
+
+      if (!token) {
+        output.textContent = "أكمل التحقق الأمني أولاً.";
+        return;
+      }
+
+      const data = new FormData(form);
+
+      button.disabled = true;
+      button.textContent = "جاري إرسال الطلب...";
+      output.textContent = "انتظر حتى يتم إرسال طلبك.";
+
+      try {
+        const response = await fetch(
+          "https://nakcvafzzvikfsjvwhpz.supabase.co/functions/v1/submit-subscription",
+          {
+            method: "POST",
+            body: data
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.error || "تعذر إرسال الطلب."
+          );
+        }
+
+        output.textContent =
+          "تم استلام طلبك بنجاح. انتظر مراجعة الإدارة قبل تفعيل الاشتراك.";
+
+        form.reset();
+
+        grade.innerHTML =
+          '<option value="">اختر الصف</option>';
+
+        if (window.turnstile) {
+          window.turnstile.reset();
+        }
+      } catch (error) {
+        console.error("Subscription error:", error);
+        output.textContent =
+          error.message || "حدث خطأ. حاول مرة أخرى.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "إرسال طلب الاشتراك";
+      }
+    });
+  }
+
+  function initialize() {
+    addReportButton();
+    setupSubscriptionForm();
+  }
+
   window.showAuth = showAuth;
   window.goHome = goHome;
   window.demoLogin = demoLogin;
   window.logout = logout;
   window.showMessage = message;
   window.showParentProgress = showParentProgress;
-
-  function initialize() {
-    addReportButton();
-  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initialize);
