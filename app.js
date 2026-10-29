@@ -85,3 +85,43 @@ window.showMessage = function(message) {
   toast.classList.remove("hidden");
   setTimeout(() => toast.classList.add("hidden"), 3500);
 };
+window.showParentProgress = function() {
+  const container = document.getElementById("parentProgress");
+
+  if (!container) {
+    window.showMessage("لازم نضيف مكان لوحة المتابعة في صفحة HTML أولاً.");
+    return;
+  }
+
+  container.innerHTML = `
+    <section class="progress-panel" dir="rtl">
+      <h2>متابعة الطالب</h2>
+      <p>كود الطالب: ${
+        document.getElementById("linkedStudent")?.textContent || "غير محدد"
+      }</p>
+
+      <div class="progress-card">
+        <h3>الحضور والغياب</h3>
+        <p>الحضور: 4 حصص</p>
+        <p>الغياب: حصة واحدة</p>
+      </div>
+
+      <div class="progress-card">
+        <h3>درجات الامتحانات</h3>
+        <p>الامتحان الأول: 16 من 20</p>
+        <p>الامتحان الثاني: 18 من 20</p>
+      </div>
+
+      <div class="progress-card">
+        <h3>التقدم الدراسي</h3>
+        <p>الدروس المكتملة: 8 من 10</p>
+        <progress value="80" max="100"></progress>
+        <p>نسبة الإنجاز: 80%</p>
+      </div>
+
+      <p class="demo-note">
+        هذه بيانات تجريبية وليست سجلاً حقيقياً للطالب.
+      </p>
+    </section>
+  `;
+};
